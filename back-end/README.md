@@ -5,7 +5,6 @@ Instalar todas as dependencias indicada pelo package.json
 Rodar o projeto usando o nodemon 
 ### nodemon app.js
 
-
 SEQUENCIA PARA CRIAR O PROJETO
 Criar o arquivo package
 ### npm init
@@ -38,7 +37,7 @@ Instalar o Workbench para gerenciar o banco de dados de forma gráfica
 
 Comandos básicos de MySQL
 Criar a base de dados
-### create database celke character set utf8mb4 collate utf8mb4_unicode_ci;
+### create database usuario character set utf8mb4 collate utf8mb4_unicode_ci;
 
 Sequelize é uma biblioteca Javascript que facilita o gerenciamento de um banco de dados SQL
 ### npm install --save sequelize

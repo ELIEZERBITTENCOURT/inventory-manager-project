@@ -24,8 +24,8 @@ const Produto = db.define('produtos', {
 });
 
 //Criar a tabela
-//Produto.sync();
+Produto.sync();
 //Verificar se há alguma diferença na tabela, realiza a alteração
-//Produto.sync({ alter: true })
+Produto.sync({ alter: true })
 
 module.exports = Produto;

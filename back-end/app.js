@@ -66,7 +66,7 @@ app.post("/cad-produto", eAdmin, async (req, res) => {
         }).catch(() => {
             return res.status(400).json({
                 erro: true,
-                mensagem: "Erro: Produto não cadastrado com sucesso!"
+                mensagem: "Erro: Produto não cadastrado!"
             });
         });
 });
@@ -82,7 +82,7 @@ app.put('/edit-produto', eAdmin, async (req, res) => {
         }).catch(() => {
             return res.status(400).json({
                 erro: true,
-                mensagem: "Erro: Produto não editado com sucesso!"
+                mensagem: "Erro: Produto não editado!"
             });
         });
 });
@@ -99,14 +99,14 @@ app.delete('/delete-produto/:id', eAdmin, async (req, res) => {
         }).catch(() => {
             return res.status(400).json({
                 erro: true,
-                mensagem: "Erro: Produto não apagado com sucesso!"
+                mensagem: "Erro: Produto não apagado!"
             });
         });
 });
 
 app.get("/list-user", eAdmin, async (req, res) => {
     await User.findAll({
-        attributes: ['id', 'name', 'email'],
+        attributes: ['id', 'name', 'email', 'password'],
         order: [['id', 'DESC']]
     })
         .then((users) => {
@@ -154,7 +154,7 @@ app.post("/add-user", eAdmin, async (req, res) => {
         }).catch(() => {
             return res.status(400).json({
                 erro: true,
-                mensagem: "Erro: Usuário não cadastrado com sucesso!"
+                mensagem: "Erro: Usuário não cadastrado!"
             });
         });
 });
@@ -174,7 +174,7 @@ app.put('/edit-user', eAdmin, async (req, res) => {
         }).catch(() => {
             return res.status(400).json({
                 erro: true,
-                mensagem: "Erro: Usuário não editado com sucesso!"
+                mensagem: "Erro: Usuário não editado!"
             });
         });
 });
@@ -191,7 +191,7 @@ app.delete('/delete-user/:id', eAdmin, async (req, res) => {
         }).catch(() => {
             return res.status(400).json({
                 erro: true,
-                mensagem: "Erro: Usuário não apagado com sucesso!"
+                mensagem: "Erro: Usuário não apagado!"
             });
         });
 });
@@ -219,8 +219,8 @@ app.post('/login', async (req, res) => {
     }
 
     var token = jwt.sign({ id: user.id }, process.env.SECRET, {
-        //expiresIn: 600 
-        expiresIn: '7d',
+        //expiresIn: 600 // salva o token por alguns minutos
+        expiresIn: '7d', //salva o token por sete dias
     });
 
 

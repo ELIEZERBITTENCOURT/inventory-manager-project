@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu } from '../../components/Menu';
 
-import { Container, ConteudoTitulo, Titulo, BotaoAcao, ButtonSuccess, Table, ButtonPrimary, ButtonWarning, ButtonDanger, AlertSuccess } from '../../styles/custom_adm';
+import { Container, ConteudoTitulo, Titulo, BotaoAcao, ButtonSuccess, Table, ButtonPrimary, ButtonWarning, ButtonDanger, AlertSuccess, AlertDanger } from '../../styles/custom_adm';
+
+import api from '../../config/configApi';
 
 export const Listar = () => {
 
@@ -10,33 +12,35 @@ export const Listar = () => {
 
     const [data, setData] = useState([]);
 
-    const [status] = useState({
+    const [status, setStatus] = useState({
         type: state ? state.type : "",
         mensagem: state ? state.mensagem : "",
     });
 
-    const listarProdutos = async => {
-        var valores = [
-            {
-                "id": 3,
-                "nome": "Monitor",
-                "valor": 820.61,
-                "quantidade": 15
-            },
-            {
-                "id": 2,
-                "nome": "Teclado",
-                "valor": 120.47,
-                "quantidade": 25
-            },
-            {
-                "id": 1,
-                "nome": "Mouse",
-                "valor": 52.47,
-                "quantidade": 43
+    const listarProdutos = async () => {
+
+        const headers = {
+            'headers': {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
-        ]
-        setData(valores);
+        }
+
+        await api.get("/list-produto", headers)
+            .then((response) => {
+                setData(response.data.produtos);
+            }).catch((err) => {
+                if (err.response) {
+                    setStatus({
+                        type: "error",
+                        mensagem: err.response.data.mensagem
+                    });
+                } else {
+                    setStatus({
+                        type: "error",
+                        mensagem: "Erro: Tente mais tarde!"
+                    });
+                }
+            });
     }
 
     useEffect(() => {
@@ -44,8 +48,27 @@ export const Listar = () => {
     }, []);
 
     const apagarProduto = async (idProduto) => {
-        //console.log(idProduto);
-        alert("Apagar o produto: " + idProduto);
+
+        await api.delete("/delete-produto/" + idProduto)
+            .then((response) => {
+                setStatus({
+                    type: "success",
+                    mensagem: response.data.mensagem
+                });
+                listarProdutos();
+            }).catch((err) => {
+                if (err.response) {
+                    setStatus({
+                        type: "error",
+                        mensagem: err.response.data.mensagem
+                    });
+                } else {
+                    setStatus({
+                        type: "error",
+                        mensagem: "Erro: Tente mais tarde!"
+                    });
+                }
+            });
     }
 
     return (
@@ -61,6 +84,7 @@ export const Listar = () => {
             </ConteudoTitulo>
 
             {status.type === "success" ? <AlertSuccess>{status.mensagem}</AlertSuccess> : ""}
+            {status.type === 'error' ? <AlertDanger>{status.mensagem}</AlertDanger> : ""}
 
             <hr />
 
@@ -69,7 +93,7 @@ export const Listar = () => {
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Valor</th>
+                        <th>Preço</th>
                         <th>Quantidade</th>
                         <th>Ações</th>
                     </tr>
@@ -79,7 +103,7 @@ export const Listar = () => {
                         <tr key={produto.id}>
                             <td>{produto.id}</td>
                             <td>{produto.nome}</td>
-                            <td>{produto.valor}</td>
+                            <td>{new Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(produto.preco_venda)}</td>
                             <td>{produto.quantidade}</td>
                             <td>
                                 <Link to={"/visualizar/" + produto.id}>

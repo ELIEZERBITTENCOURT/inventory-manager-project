@@ -1,12 +1,17 @@
-import React from 'react';
-import {NavLink } from 'react-router-dom';
-import {NavList} from './styles';
+import React, { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 
-export const Menu = () =>{
-    return(
-        <NavList>            
-            <NavLink to="/"><li>Dashboard</li></NavLink>
-            <NavLink to="/listar"><li>Listar</li></NavLink>
+import { Context } from '../../Context/AuthContext';
+
+import { NavList } from './styles';
+
+export const Menu = () => {
+    const { handleLogout } = useContext(Context);
+    return (
+        <NavList>
+            <NavLink to="/dashboard"><li>Dashboard</li></NavLink>
+            <NavLink to="/listar"><li>Produtos</li></NavLink>
+            <NavLink to="#" onClick={handleLogout}><li>Sair</li></NavLink>
         </NavList>
     )
 }
